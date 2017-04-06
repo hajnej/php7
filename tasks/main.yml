@@ -43,7 +43,7 @@
       group: root
       mode: "0644"
     notify:
-      - "Restart php7-fpm" 
+     - "Reload systemd"
 
   - name: "Fix SeLinux context"
     sefcontext:
