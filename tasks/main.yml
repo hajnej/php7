@@ -1,0 +1,142 @@
+---
+- block:
+  - name: "Install packages for building purposes"
+    yum:
+      name: "@development"
+      state: present
+  
+  - name: "Install module dependencies"
+    yum:
+      name: "{{item}}"
+      state: present
+    with_items:
+      - policycoreutils-python
+
+  - name: "Install PHP7 build requirements"
+    yum:
+      name: "{{item}}"
+      state: present
+    with_items: "{{php7_buildrequires}}"
+  
+  - name: "Create PHP7 user"
+    user:
+      name: "{{php7_user_name}}"
+      shell: "{{php7_user_shell}}"
+      comment: "{{php7_user_gecos}}"
+      home: "{{php7_user_homedir}}"
+      system: True
+      state: present
+
+  - name: "Create PHP7 install directory"
+    file:
+      dest: "{{php7_root_dir}}"
+      state: directory
+      mode: "0755"
+      owner: "{{php7_user_name}}"
+      group: "{{php7_user_name}}"
+
+  - name: "Copy php7-fpm systemd service unit"
+    template:
+      src: php7-fpm.service.j2
+      dest: "{{php7_systemd_unit}}"
+      owner: root
+      group: root
+      mode: "0644"
+    notify:
+      - "Restart php7-fpm" 
+
+  - name: "Fix SeLinux context"
+    sefcontext:
+      setype: "{{item.setype}}"
+      target: "{{item.target}}"
+    with_items:
+      - "{{php7_sefcontext}}"
+
+  become: True
+  become_user: "root"
+
+- block:
+  - name: "Get PHP7 source"
+    get_url:
+      url: "{{php7_source_url}}"
+      checksum: "{{php7_source_checksum}}"
+      dest: "{{php7_user_homedir}}/{{php7_archive}}"
+    tags:
+      - build
+  
+  - name: "Unpack PHP7 source"
+    unarchive:
+      src: "{{php7_user_homedir}}/{{php7_archive}}"
+      dest: "{{php7_user_homedir}}"
+      remote_src: True
+    tags:
+      - build
+
+  - name: "Run configure script"
+    command: "./configure {{php7_configure}}"
+    args:
+      chdir: "{{php7_user_homedir}}/{{php7_build}}"
+    tags:
+      - build
+
+  - name: "Run make command"
+    make:
+      chdir: "{{php7_user_homedir}}/{{php7_build}}"
+    tags:
+      - build
+
+  - name: "Run make install commmand"
+    make:
+      chdir: "{{php7_user_homedir}}/{{php7_build}}"
+      target: install
+    tags:
+      - build
+
+  - name: "Render main php-fpm configuration file"
+    template:
+      src: "php-fpm.conf.j2"
+      dest: "{{php7_fpm_config_file}}"
+      mode: "0644"
+      owner: "{{php7_user_name}}"
+      group: "{{php7_user_name}}"
+
+  - name: "Render php-fpm pools"
+    template:
+      src: "pool.conf.j2"
+      dest: "{{php7_pool_config_dir}}/{{item.pool_name}}.conf"
+      mode: "0644"
+      owner: "{{php7_user_name}}"
+      group: "{{php7_user_name}}"
+    with_items: 
+      - "{{php7_pools}}"
+
+  - name: "Render php.ini file"
+    template:
+      src: php.ini-development
+      dest: "{{php7_lib_dir}}/php.ini"
+      mode: "0644"
+      owner: "{{php7_user_name}}"
+      group: "{{php7_user_name}}"
+
+    
+  become: True
+  become_user: "{{php7_user_name}}"
+
+- name: "Restore SeLinux context"
+  command: "restorecon -R {{item}}"
+  with_items:
+    - "{{php7_root_dir}}"
+    - "{{php7_systemd_unit}}"
+  become: True
+
+- name: "Start and enable php-fpm"
+  systemd:
+    daemon-reload: True
+    state: restarted
+    enabled: True
+    name: php7-fpm
+  become: True
+  tags:
+    - bounce
+
+

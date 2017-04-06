@@ -1,0 +1,12 @@
+[Unit]
+Description=The PHP7 FastCGI Process Manager
+After=syslog.target network.target
+
+[Service]
+Type=notify
+PIDFile={{php7_global_pidfile}}
+ExecStart={{php7_fpm_exec}} --nodaemonize
+ExecReload=/bin/kill -USR2 $MAINPID
+
+[Install]
+WantedBy=multi-user.target

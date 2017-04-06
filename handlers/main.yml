@@ -1,0 +1,7 @@
+---
+- name: "Restart php7-fpm"
+  systemd:
+    state: restarted
+    daemon-reload: True
+    enabled: True
+    name: php7-fpm

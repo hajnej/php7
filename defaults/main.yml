@@ -1,0 +1,60 @@
+---
+php7_buildrequires:
+  - "systemd-devel"
+
+php7_user_name: "php7"
+php7_user_group: "{{php7_user_name}}"
+php7_user_homedir: "/home/{{php7_user_name}}"
+php7_user_shell: "/sbin/nologin"
+php7_user_gecos: "PHP7 account"
+php7_build: "php-7.1.3"
+php7_archive: "{{php7_build}}.tar.bz2"
+php7_source_url: "http://cz1.php.net/distributions/{{php7_archive}}"
+php7_source_checksum: "sha256:c145924d91b7a253eccc31f8d22f15b61589cd24d78105e56240c1bb6413b94f"
+php7_systemd_unit: "/etc/systemd/system/php7-fpm.service"
+
+php7_sefcontext:
+  - setype: "httpd_exec_t"
+    target: "{{php7_fpm_exec}}"
+  - setype: "var_t"
+    target: "{{php7_var_dir}}"
+  - setype: "bin_t" 
+    target: "{{php7_bin_dir}}(/.*)?"
+  - setype: "etc_t"
+    target: "{{php7_etc_dir}}(/.*)?"
+  - setype: "httpd_unit_file_t"
+    target: "{{php7_systemd_unit | replace('etc','usr/lib')}}"
+  - setype: "httpd_log_t"
+    target: "{{php7_log_dir}}(/.*)?"
+  - setype: "httpd_var_run_t"
+    target: "{{php7_var_dir}}(/.*)?"
+  - setype: "lib_t"
+    target: "{{php7_lib_dir}}"
+  
+
+php7_root_dir: "/opt/php7"
+php7_fpm_exec: "{{php7_root_dir}}/sbin/php-fpm"
+php7_etc_dir: "{{php7_root_dir}}/etc"
+php7_bin_dir: "{{php7_root_dir}}/bin"
+php7_fpm_config_file: "{{php7_etc_dir}}/php-fpm.conf"
+php7_pool_config_dir: "{{php7_etc_dir}}/php-fpm.d"
+php7_lib_dir: "{{php7_root_dir}}/lib"
+php7_var_dir: "{{php7_root_dir}}/var"
+php7_log_dir: "{{php7_var_dir}}/log"
+php7_global_pidfile: "{{php7_var_dir}}/run/php7-fpm.pid"
+php7_global_errorlog: "{{php7_log_dir}}/error.log"
+php7_global_loglevel: "notice"
+php7_global_maxproc: 0
+php7_global_emergency_restart_threshold: 10
+php7_global_emergency_restart_interval: "1m"
+php7_global_process_control_timeout: 0
+php7_global_process_priority: 0
+php7_pools: []
+#  - pool_name: "www"
+#    prefix: "/srv/websites/test"
+#    user: "nobody"
+#    listen: "php7.sock"
+    
+php7_install_prefix: "--prefix {{php7_root_dir}}"
+php7_configure: "{{php7_install_prefix}} --disable-all --enable-fpm --with-fpm-systemd"
+
