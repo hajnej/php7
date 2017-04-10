@@ -1,5 +1,5 @@
 ---
-- name: "Restart php7-fpm"
+- name: "Reload systemd"
   systemd:
     daemon-reload: True
     enabled: True

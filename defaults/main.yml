@@ -56,5 +56,5 @@ php7_pools: []
 #    listen: "php7.sock"
     
 php7_install_prefix: "--prefix {{php7_root_dir}}"
-php7_configure: "{{php7_install_prefix}} --disable-all --enable-fpm --with-fpm-systemd"
+php7_configure: "{{php7_install_prefix}} --disable-all --enable-fpm --with-fpm-systemd --enable-session"
 
