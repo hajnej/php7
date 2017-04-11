@@ -6,7 +6,7 @@ php7_buildrequires:
   - "libxml2-devel"
   - "openssl-devel"
   - "ImageMagick-devel"
-  - "memcached-devel"
+  - "libmemcached-devel"
 
 php7_extensions:
   - "pecl/imagick"

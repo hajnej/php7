@@ -98,7 +98,7 @@
       state: present
     with_items: "{{php7_extensions}}"
     environment:
-      PATH: "{{php7_bin_dir}}"
+      PATH: "{{ansible_env.PATH}}:{{php7_bin_dir}}"
 
   - name: "Render main php-fpm configuration file"
     template:
