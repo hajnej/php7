@@ -5,6 +5,12 @@ php7_buildrequires:
   - "libpng-devel"
   - "libxml2-devel"
   - "openssl-devel"
+  - "ImageMagick-devel"
+  - "memcached-devel"
+
+php7_extensions:
+  - "pecl/imagick"
+  - "pecl/memcached"
 
 php7_user_name: "php7"
 php7_user_group: "{{php7_user_name}}"
