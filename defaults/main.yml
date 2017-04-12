@@ -7,8 +7,18 @@ php7_buildrequires:
   - "openssl-devel"
   - "ImageMagick-devel"
   - "libmemcached-devel"
+  - "libssh2-devel"
+  - "libcurl-devel"
+  - "mariadb-devel"
+  - "libicu-devel"
+  - "libmcrypt-devel"
+  - "uw-imap-devel"
+  - "uw-imap-static"
+  - "libc-client"
 
 php7_extensions:
+  - "pecl/ssh2-alpha"
+  - "pecl/mailparse"
   - "pecl/imagick"
   - "pecl/memcached"
 
@@ -66,4 +76,4 @@ php7_pools: []
 #    listen: "php7.sock"
     
 php7_install_prefix: "--prefix {{php7_root_dir}}"
-php7_configure: "{{php7_install_prefix}} --disable-all --enable-fpm --with-fpm-systemd --enable-session --enable-pdo --with-pdo-pgsql=/usr/lib64 --enable-json --with-iconv --enable-fileinfo  --enable-tokenizer --enable-mbstring --with-gd --with-pear --enable-xml --enable-libxml --with-openssl --with-zlib"
+php7_configure: "{{php7_install_prefix}} --disable-all --enable-fpm --with-fpm-systemd --enable-session --enable-pdo --with-pdo-pgsql --with-pdo-mysql --enable-json --with-iconv --enable-fileinfo --enable-tokenizer --enable-mbstring --with-gd --with-pear --enable-xml --enable-libxml --with-openssl --with-zlib --enable-opcache --enable-opcache-file  --with-curl  --with-mysqli --enable-exif --enable-filter --enable-hash --enable-intl --with-mcrypt --with-pgsql --enable-sockets --enable-phar --enable-simplexml --enable-soap --enable-xmlreader --enable-zip --with-imap --with-imap-ssl --with-libdir=lib64 --with-kerberos"

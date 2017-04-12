@@ -12,6 +12,11 @@
     with_items:
       - policycoreutils-python
 
+  - name: "Install epel-release"
+    yum:
+      name: "epel-release"
+      state: "present"
+
   - name: "Install PHP7 build requirements"
     yum:
       name: "{{item}}"
