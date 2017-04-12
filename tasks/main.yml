@@ -104,6 +104,7 @@
     with_items: "{{php7_extensions}}"
     environment:
       PATH: "{{ansible_env.PATH}}:{{php7_bin_dir}}"
+    failed_when: False
 
   - name: "Render main php-fpm configuration file"
     template:
