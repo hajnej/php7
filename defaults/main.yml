@@ -5,6 +5,7 @@ php7_buildrequires:
   - "libpng-devel"
   - "libxml2-devel"
   - "openssl-devel"
+  - "libjpeg-turbo-devel"
   - "ImageMagick-devel"
   - "libmemcached-devel"
   - "libssh2-devel"
@@ -15,6 +16,7 @@ php7_buildrequires:
   - "uw-imap-devel"
   - "uw-imap-static"
   - "libc-client"
+  - "libxslt-devel"
 
 php7_extensions:
   - "pecl/ssh2-alpha"
@@ -27,10 +29,10 @@ php7_user_group: "{{php7_user_name}}"
 php7_user_homedir: "/home/{{php7_user_name}}"
 php7_user_shell: "/sbin/nologin"
 php7_user_gecos: "PHP7 account"
-php7_build: "php-7.1.3"
+php7_build: "php-7.1.11"
 php7_archive: "{{php7_build}}.tar.bz2"
 php7_source_url: "http://cz1.php.net/distributions/{{php7_archive}}"
-php7_source_checksum: "sha256:c145924d91b7a253eccc31f8d22f15b61589cd24d78105e56240c1bb6413b94f"
+php7_source_checksum: "sha256:7646d7de701fc969e3305eeeb2eddda3d46af6a88ee20ef4a47270c447228573"
 php7_systemd_unit: "/etc/systemd/system/php7-fpm.service"
 
 php7_sefcontext:
@@ -76,4 +78,4 @@ php7_pools: []
 #    listen: "php7.sock"
     
 php7_install_prefix: "--prefix {{php7_root_dir}}"
-php7_configure: "{{php7_install_prefix}} --disable-all --enable-fpm --with-fpm-systemd --enable-session --enable-pdo --with-pdo-pgsql --with-pdo-mysql --enable-json --with-iconv --enable-fileinfo --enable-tokenizer --enable-mbstring --with-gd --with-pear --enable-xml --enable-libxml --with-openssl --with-zlib --enable-opcache --enable-opcache-file  --with-curl  --with-mysqli --enable-exif --enable-filter --enable-hash --enable-intl --with-mcrypt --with-pgsql --enable-sockets --enable-phar --enable-simplexml --enable-soap --enable-xmlreader --enable-zip --with-imap --with-imap-ssl --with-libdir=lib64 --with-kerberos --enable-dom"
+php7_configure: "{{php7_install_prefix}} --enable-fpm --with-fpm-systemd --enable-session --enable-pdo --with-pdo-pgsql --with-pdo-mysql --enable-json --with-iconv --enable-fileinfo --enable-tokenizer --enable-mbstring --with-gd --with-pear --enable-xml --enable-libxml --with-openssl --with-zlib --enable-opcache --enable-opcache-file --with-curl --with-mysqli --enable-exif --enable-filter --enable-hash --enable-intl --with-mcrypt --with-pgsql --enable-sockets --enable-phar --enable-simplexml --enable-soap --enable-xmlreader --enable-zip --with-imap --with-imap-ssl --with-libdir=lib64 --with-kerberos --enable-dom --enable-wddx --enable-xmlwriter --with-xsl --with-jpeg-dir=/usr/lib64 --with-png-dir=/usr/lib64 --enable-ctype --with-zlib-dir=/usr/lib64"
